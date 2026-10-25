@@ -680,6 +680,7 @@ func (cr *containerReference) create(capAdd, capDrop []string) common.Executor {
 				Target: mountTarget,
 			})
 		}
+		mounts = append(mounts, input.TmpfsMounts...)
 
 		var platSpecs *specs.Platform
 		if cr.input.Platform != "" {

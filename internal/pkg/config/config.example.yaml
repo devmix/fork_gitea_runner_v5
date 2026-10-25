@@ -286,6 +286,10 @@ container:
   # GITEA_DOCKER_WORKSPACE variable.
   # The workspace parent directory must be mounted into the runner container.
   #bind_workdir: false
+  # Mount the workspace as a tmpfs volume instead of a Docker volume.
+  #workdir_mount_as_tempfs: false
+  # Mount options for the workdir tmpfs volume, e.g. [[exec]].
+  #workdir_tempfs_options:
   # How long a job waits for a service container that declares a healthcheck to become
   # healthy. A negative value (e.g. -1s) starts the steps without waiting.
   #service_ready_timeout: 5m

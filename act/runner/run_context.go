@@ -85,6 +85,7 @@ type RunContext struct {
 	jobEnv             map[string]string          // workflow and job env as evaluated for the container and service specs
 	dockerActionImages map[*model.Step]string     // Dockerfile action images built for this job, removed when it ends
 	actionDownloads    map[string]*actionDownload // remote action repositories by clone URL and ref, fetched once per job
+	workdirTmpfs       []mount.Mount              // tmpfs mount replacing the workdir volume when WorkdirMountAsTempfs
 
 	// summaryFileInitialized tracks which per-step summary files (workflow/step-summary-N.md)
 	// have already been created on the JobContainer. The runner sets up file-command files
@@ -378,6 +379,12 @@ func (rc *RunContext) GetBindsAndMounts(ctx context.Context) ([]string, map[stri
 				bindModifiers = ":z"
 			}
 			binds = append(binds, fmt.Sprintf("%s:%s%s", source, target, bindModifiers))
+		} else if rc.Config.WorkdirMountAsTempfs {
+			tmpfs := mount.Mount{Type: mount.TypeTmpfs, Target: target}
+			if rc.Config.WorkdirTempfsOptions != nil {
+				tmpfs.TmpfsOptions = &mount.TmpfsOptions{Options: *rc.Config.WorkdirTempfsOptions}
+			}
+			rc.workdirTmpfs = []mount.Mount{tmpfs}
 		} else {
 			mounts[name] = target
 		}
@@ -596,6 +603,7 @@ func (rc *RunContext) startJobContainer() common.Executor {
 		}
 		rc.startDockerProxy(ctx)
 		containerInput.Binds, containerInput.Mounts = rc.GetBindsAndMounts(ctx)
+		containerInput.TmpfsMounts = rc.workdirTmpfs
 		containerInput.ValidVolumes = rc.validVolumes()
 
 		rc.jobNetworkName = networkName

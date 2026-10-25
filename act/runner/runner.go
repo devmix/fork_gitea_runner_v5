@@ -33,6 +33,8 @@ type Config struct {
 	ActionOfflineMode             bool                                          // when offline, use cached action contents
 	ActionCloneDepth              int                                           // limit history when cloning an action repo, 0 clones every branch in full
 	BindWorkdir                   bool                                          // bind the workdir to the job container
+	WorkdirMountAsTempfs          bool                                          // mount the workdir as a tmpfs volume instead of a docker volume
+	WorkdirTempfsOptions          *[][]string                                   // options for the workdir tmpfs mount, e.g. [["exec"]]
 	EventName                     string                                        // name of event to run
 	EventPath                     string                                        // path to JSON file to use for event.json in containers
 	ForcePull                     bool                                          // force pulling of the image, even if already present

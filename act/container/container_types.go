@@ -18,6 +18,7 @@ import (
 
 	"github.com/docker/go-connections/nat"
 	"github.com/moby/moby/api/types/container"
+	"github.com/moby/moby/api/types/mount"
 )
 
 // ExitCodeError reports a non-zero process exit code from a container command.
@@ -38,6 +39,7 @@ type NewContainerInput struct {
 	Env             []string
 	Binds           []string
 	Mounts          map[string]string
+	TmpfsMounts     []mount.Mount // tmpfs mounts the runner adds itself, e.g. the workdir
 	Name            string
 	Stdout          io.Writer
 	Stderr          io.Writer

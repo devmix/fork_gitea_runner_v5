@@ -571,13 +571,15 @@ func (r *Runner) run(ctx context.Context, task *runnerv1.Task, reporter *report.
 	runnerConfig := &runner.Config{
 		// On Linux, Workdir will be like "/<parent_directory>/<owner>/<repo>"
 		// On Windows, Workdir will be like "\<parent_directory>\<owner>\<repo>"
-		Workdir:           workdir,
-		BindWorkdir:       r.cfg.Container.BindWorkdir,
-		ActionCacheDir:    filepath.FromSlash(r.cfg.Host.WorkdirParent),
-		AllocatePTY:       r.cfg.Runner.AllocatePTY,
-		ActionOfflineMode: r.cfg.Cache.OfflineMode,
-		ActionCloneDepth:  actionCloneDepth,
-		NoActionPatch:     r.cfg.Runner.PatchActions != nil && !*r.cfg.Runner.PatchActions,
+		Workdir:              workdir,
+		BindWorkdir:          r.cfg.Container.BindWorkdir,
+		WorkdirMountAsTempfs: r.cfg.Container.WorkdirMountAsTempfs,
+		WorkdirTempfsOptions: r.cfg.Container.WorkdirTempfsOptions,
+		ActionCacheDir:       filepath.FromSlash(r.cfg.Host.WorkdirParent),
+		AllocatePTY:          r.cfg.Runner.AllocatePTY,
+		ActionOfflineMode:    r.cfg.Cache.OfflineMode,
+		ActionCloneDepth:     actionCloneDepth,
+		NoActionPatch:        r.cfg.Runner.PatchActions != nil && !*r.cfg.Runner.PatchActions,
 
 		ForcePull:            r.cfg.Container.ForcePull,
 		ForceRebuild:         r.cfg.Container.ForceRebuild,

@@ -169,21 +169,23 @@ func parseSize(value string) (Size, error) {
 
 // Container represents the configuration for the container.
 type Container struct {
-	Network              string                        `yaml:"network"`                // Network specifies the network for the container.
-	NetworkCreateOptions ContainerNetworkCreateOptions `yaml:"network_create_options"` // Add options when the network need to be created by the runner
-	NetworkMode          string                        `yaml:"network_mode"`           // Deprecated: use Network instead. Could be removed after Gitea 1.20
-	Privileged           bool                          `yaml:"privileged"`             // Privileged indicates whether the container runs in privileged mode.
-	Options              string                        `yaml:"options"`                // Options specifies additional options for the container.
-	WorkdirParent        string                        `yaml:"workdir_parent"`         // WorkdirParent specifies the parent directory for the container's working directory.
-	ValidVolumes         []string                      `yaml:"valid_volumes"`          // ValidVolumes specifies the volumes (including bind mounts) can be mounted to containers.
-	DockerHost           string                        `yaml:"docker_host"`            // DockerHost specifies the Docker host. It overrides the value specified in environment variable DOCKER_HOST.
-	ForcePull            bool                          `yaml:"force_pull"`             // Pull docker image(s) even if already present, except digest-pinned ones. A pull that fails while a local copy exists is a warning, not a job failure.
-	ForceRebuild         bool                          `yaml:"force_rebuild"`          // Rebuild docker image(s) even if already present
-	RequireDocker        bool                          `yaml:"require_docker"`         // Always require a reachable docker daemon, even if not required by runner
-	DockerTimeout        time.Duration                 `yaml:"docker_timeout"`         // Timeout to wait for the docker daemon to be reachable, if docker is required by require_docker or runner
-	BindWorkdir          bool                          `yaml:"bind_workdir"`           // BindWorkdir mounts the workspace from a host directory instead of a Docker volume.
-	ServiceReadyTimeout  time.Duration                 `yaml:"service_ready_timeout"`  // ServiceReadyTimeout bounds how long a job waits for a service container that declares a healthcheck to report healthy. Negative disables waiting.
-	Sweep                *bool                         `yaml:"sweep"`                  // Sweep removes the containers, networks and volumes a job creates through its Docker proxy when the job ends. Unset means enabled.
+	Network              string                        `yaml:"network"`                 // Network specifies the network for the container.
+	NetworkCreateOptions ContainerNetworkCreateOptions `yaml:"network_create_options"`  // Add options when the network need to be created by the runner
+	NetworkMode          string                        `yaml:"network_mode"`            // Deprecated: use Network instead. Could be removed after Gitea 1.20
+	Privileged           bool                          `yaml:"privileged"`              // Privileged indicates whether the container runs in privileged mode.
+	Options              string                        `yaml:"options"`                 // Options specifies additional options for the container.
+	WorkdirParent        string                        `yaml:"workdir_parent"`          // WorkdirParent specifies the parent directory for the container's working directory.
+	ValidVolumes         []string                      `yaml:"valid_volumes"`           // ValidVolumes specifies the volumes (including bind mounts) can be mounted to containers.
+	DockerHost           string                        `yaml:"docker_host"`             // DockerHost specifies the Docker host. It overrides the value specified in environment variable DOCKER_HOST.
+	ForcePull            bool                          `yaml:"force_pull"`              // Pull docker image(s) even if already present, except digest-pinned ones. A pull that fails while a local copy exists is a warning, not a job failure.
+	ForceRebuild         bool                          `yaml:"force_rebuild"`           // Rebuild docker image(s) even if already present
+	RequireDocker        bool                          `yaml:"require_docker"`          // Always require a reachable docker daemon, even if not required by runner
+	DockerTimeout        time.Duration                 `yaml:"docker_timeout"`          // Timeout to wait for the docker daemon to be reachable, if docker is required by require_docker or runner
+	BindWorkdir          bool                          `yaml:"bind_workdir"`            // BindWorkdir mounts the workspace from a host directory instead of a Docker volume.
+	WorkdirMountAsTempfs bool                          `yaml:"workdir_mount_as_tempfs"` // WorkdirMountAsTempfs mounts the workspace as a tmpfs volume instead of a Docker volume.
+	WorkdirTempfsOptions *[][]string                   `yaml:"workdir_tempfs_options"`  // WorkdirTempfsOptions are mount options for the workdir tmpfs volume, e.g. [[exec]].
+	ServiceReadyTimeout  time.Duration                 `yaml:"service_ready_timeout"`   // ServiceReadyTimeout bounds how long a job waits for a service container that declares a healthcheck to report healthy. Negative disables waiting.
+	Sweep                *bool                         `yaml:"sweep"`                   // Sweep removes the containers, networks and volumes a job creates through its Docker proxy when the job ends. Unset means enabled.
 }
 
 // Values of Runner.ToolCacheMode: the runner mounts no tool cache, or one that every job reuses.
